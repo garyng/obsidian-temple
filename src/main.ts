@@ -13,6 +13,7 @@ export default class MyPlugin extends Plugin {
 
 	async onload() {
 		console.log('loading plugin');
+		debugger;
 
 		await this.loadSettings();
 

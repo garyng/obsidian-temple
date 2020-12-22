@@ -3,10 +3,12 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import copy from "rollup-plugin-copy";
 
+let distDir = "notes/.obsidian/plugins/obsidian-temple/"
+
 export default {
   input: "src/main.ts",
   output: {
-    dir: "dist",
+    dir: distDir,
     sourcemap: "inline",
     format: "cjs",
     exports: "default",
@@ -17,9 +19,10 @@ export default {
     nodeResolve({ browser: true }),
     commonjs(),
     copy({
+      copyOnce: false,
       targets: [
-        { src: "styles.css", dest: "dist/" },
-        { src: "manifest.json", dest: "dist/" },
+        { src: "src/styles.css", dest: distDir },
+        { src: "manifest.json", dest: distDir },
       ],
     }),
   ],
