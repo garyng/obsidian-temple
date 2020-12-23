@@ -1,15 +1,11 @@
-import { addIcon, App, FuzzySuggestModal, MarkdownView, Modal, Notice, Plugin, PluginManifest, PluginSettingTab, Setting } from 'obsidian';
+import { addIcon, App, FuzzySuggestModal, MarkdownView, Modal, Notice, Plugin, PluginManifest } from 'obsidian';
 import { ICON } from './constants';
 import { FileInfoTempleProvider } from './providers/FileInfoTempleProvider';
 import { DateTimeTempleProvider } from './providers/DateTimeTempleProvider';
 import { TempleService } from './TempleService';
-
-// interface TempleSettings {
-// 	mySetting: string;
-// }
-// const DEFAULT_SETTINGS: TempleSettings = {
-// 	mySetting: 'default'
-// }
+import { TempleSettingsTab } from './settings/TempleSettingsTab';
+import { ObsidianService } from './ObsidianService';
+import { TempleSettings } from "./settings/TempleSettings";
 
 class TagFuzzySuggestModal extends FuzzySuggestModal<string> {
     app: App;
@@ -36,7 +32,9 @@ class TagFuzzySuggestModal extends FuzzySuggestModal<string> {
 	}
 }
 export default class TemplePlugin extends Plugin {
-	private _service: TempleService;
+	private _temple: TempleService;
+	private _obs: ObsidianService;
+	_settings: TempleSettings;
 
 	// todo: select templates
 	// todo: configure templates directory
@@ -44,29 +42,34 @@ export default class TemplePlugin extends Plugin {
 	constructor(app: App, pluginManifest: PluginManifest) {
 		super(app, pluginManifest);
 		
-		this._service = new TempleService();
+		this._temple = new TempleService();
+		this._obs = new ObsidianService(this);
     }
 
 	async onload() {
 
-		this._service.register(new FileInfoTempleProvider(this.app.workspace));
-		this._service.register(new DateTimeTempleProvider());
+		this._temple.register(new FileInfoTempleProvider(this.app.workspace));
+		this._temple.register(new DateTimeTempleProvider());
 
 		addIcon('temple', ICON);
+		this._obs.loadSettings();
+		this.addSettingTab(new TempleSettingsTab(this.app, this, this._obs));
 		this.addRibbonIcon('temple', 'Temple', async () => {
 
 // 			let file = this.app.workspace.getActiveFile();
+
 // 			// let activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
 // 			// let editor = activeView.sourceMode.cmEditor;
 // 			// let doc = editor.getDoc();
+
 // 			let content = await this.app.vault.read(file);
-			console.log(this._service.resolve());
-			let template = `{% for i in range(0, 3) -%}
-my name is {{ file.name }}
-{{ datetime.now }}
-{% endfor -%}
-`;
-			console.log(this._service.render(template))
+// 			console.log(this._temple.resolve());
+// 			let template = `{% for i in range(0, 3) -%}
+// my name is {{ file.name }}
+// {{ datetime.now }}
+// {% endfor -%}
+// `;
+			// console.log(this._temple.render(template))
 // 			let rendered = njk.renderString(template, {
 // 				file
 // 			});
@@ -80,6 +83,8 @@ my name is {{ file.name }}
 
 		})
 	}
+
+	
 
 	// settings: TempleSettings;
 
@@ -152,34 +157,5 @@ my name is {{ file.name }}
 // 	onClose() {
 // 		let {contentEl} = this;
 // 		contentEl.empty();
-// 	}
-// }
-
-// class TempleSettingsTab extends PluginSettingTab {
-// 	plugin: Temple;
-
-// 	constructor(app: App, plugin: Temple) {
-// 		super(app, plugin);
-// 		this.plugin = plugin;
-// 	}
-
-// 	display(): void {
-// 		let {containerEl} = this;
-
-// 		containerEl.empty();
-
-// 		containerEl.createEl('h2', {text: 'Settings for my awesome plugin.'});
-
-// 		new Setting(containerEl)
-// 			.setName('Setting #1')
-// 			.setDesc('It\'s a secret')
-// 			.addText(text => text
-// 				.setPlaceholder('Enter your secret')
-// 				.setValue('')
-// 				.onChange(async (value) => {
-// 					console.log('Secret: ' + value);
-// 					this.plugin.settings.mySetting = value;
-// 					await this.plugin.saveSettings();
-// 				}));
 // 	}
 // }
