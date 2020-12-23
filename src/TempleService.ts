@@ -15,14 +15,17 @@ export class TempleService {
 	}
 
 	resolve(): IAggregatedContext {
-		let contexts = this._providers.map(provider => ({ [provider.name]: provider.provide() }));
+		let contexts = this._providers
+			.map(provider => ({ name: provider.name, value: provider.provide() }))
+			.filter(c => c.value != null)
+			.map(c => ({ [c.name]: c.value }));
 		return Object.assign({}, ...contexts);
 	}
 
 	render(template: string, aggregated: IAggregatedContext | null = null): string {
 		aggregated ??= this.resolve();
 		// only take the context from each TempleContext for nunjucks
-		let context = _.mapValues(aggregated, context => context.context);
+		let context = _.mapValues(aggregated, c => c.context);
 		return njk.renderString(template, context);
 	}
 }
