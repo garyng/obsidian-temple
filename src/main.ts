@@ -2,6 +2,7 @@ import { addIcon, App, FuzzySuggestModal, MarkdownView, Modal, Notice, Plugin, P
 import { ICON } from './constants';
 import { FileInfoTempleProvider } from './providers/FileInfoTempleProvider';
 import { DateTimeTempleProvider } from './providers/DateTimeTempleProvider';
+import { ZettelTempleProvider } from './providers/ZettelTempleProvider';
 import { TempleService } from './TempleService';
 import { TempleSettingsTab } from './settings/TempleSettingsTab';
 import { ObsidianService } from './ObsidianService';
@@ -25,6 +26,7 @@ export default class TemplePlugin extends Plugin {
 	async onload() {
 
 		this._temple.register(new FileInfoTempleProvider(this.app.workspace));
+		this._temple.register(new ZettelTempleProvider(this.app.workspace));
 		this._temple.register(new DateTimeTempleProvider());
 
 		addIcon('temple', ICON);
