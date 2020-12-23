@@ -1,4 +1,4 @@
-import { addIcon, App, FuzzySuggestModal, MarkdownView, Modal, Notice, Plugin, PluginManifest } from 'obsidian';
+import { addIcon, App, FuzzySuggestModal, MarkdownView, Modal, Notice, Plugin, PluginManifest, TFolder, Vault } from 'obsidian';
 import { ICON } from './constants';
 import { FileInfoTempleProvider } from './providers/FileInfoTempleProvider';
 import { DateTimeTempleProvider } from './providers/DateTimeTempleProvider';
@@ -7,30 +7,6 @@ import { TempleSettingsTab } from './settings/TempleSettingsTab';
 import { ObsidianService } from './ObsidianService';
 import { TempleSettings } from "./settings/TempleSettings";
 
-class TagFuzzySuggestModal extends FuzzySuggestModal<string> {
-    app: App;
-
-    constructor(app: App) {
-        super(app);
-        this.app = app;
-    }
-
-    getItems(): string[] {
-        return Object.keys({
-			"a": 1,
-			"b": 2,
-			"c": 3
-		});
-    }
-
-    getItemText(item: string): string {
-        return item;
-    }
-
-    onChooseItem(item: string, evt: MouseEvent | KeyboardEvent): void {
-        console.log('You chose the tag ' + item + '!');
-	}
-}
 export default class TemplePlugin extends Plugin {
 	private _temple: TempleService;
 	private _obs: ObsidianService;
@@ -43,7 +19,7 @@ export default class TemplePlugin extends Plugin {
 		super(app, pluginManifest);
 		
 		this._temple = new TempleService();
-		this._obs = new ObsidianService(this);
+		this._obs = new ObsidianService(this, this._temple);
     }
 
 	async onload() {
@@ -52,35 +28,18 @@ export default class TemplePlugin extends Plugin {
 		this._temple.register(new DateTimeTempleProvider());
 
 		addIcon('temple', ICON);
+
 		this._obs.loadSettings();
 		this.addSettingTab(new TempleSettingsTab(this.app, this, this._obs));
 		this.addRibbonIcon('temple', 'Temple', async () => {
-
-// 			let file = this.app.workspace.getActiveFile();
-
-// 			// let activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
-// 			// let editor = activeView.sourceMode.cmEditor;
-// 			// let doc = editor.getDoc();
-
-// 			let content = await this.app.vault.read(file);
-// 			console.log(this._temple.resolve());
-// 			let template = `{% for i in range(0, 3) -%}
-// my name is {{ file.name }}
-// {{ datetime.now }}
-// {% endfor -%}
-// `;
-			// console.log(this._temple.render(template))
-// 			let rendered = njk.renderString(template, {
-// 				file
-// 			});
-
-// 			let newContent = content + rendered;
-
-// 			await this.app.vault.modify(file, newContent);
-
-			// let modal = new TagFuzzySuggestModal(this.app);
-			// modal.open();
-
+			await this._obs.promptTemplate();
+		});
+		this.addCommand({
+			id: 'obsidian-temple-insert',
+			name: 'Insert template',
+			callback: async () => {
+				await this._obs.promptTemplate();
+			}
 		})
 	}
 
