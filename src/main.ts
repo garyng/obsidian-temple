@@ -1,21 +1,83 @@
-import { addIcon, App, Modal, Notice, Plugin, PluginSettingTab, Setting } from 'obsidian';
+import { addIcon, App, FuzzySuggestModal, MarkdownView, Modal, Notice, Plugin, PluginManifest, PluginSettingTab, Setting } from 'obsidian';
 import { ICON } from './constants';
+import { FileInfoTempleProvider } from './providers/FileInfoTempleProvider';
+import { DateTimeTempleProvider } from './providers/DateTimeTempleProvider';
+import { TempleService } from './TempleService';
 
 // interface TempleSettings {
 // 	mySetting: string;
 // }
-
 // const DEFAULT_SETTINGS: TempleSettings = {
 // 	mySetting: 'default'
 // }
 
-export default class Temple extends Plugin {
+class TagFuzzySuggestModal extends FuzzySuggestModal<string> {
+    app: App;
 
+    constructor(app: App) {
+        super(app);
+        this.app = app;
+    }
+
+    getItems(): string[] {
+        return Object.keys({
+			"a": 1,
+			"b": 2,
+			"c": 3
+		});
+    }
+
+    getItemText(item: string): string {
+        return item;
+    }
+
+    onChooseItem(item: string, evt: MouseEvent | KeyboardEvent): void {
+        console.log('You chose the tag ' + item + '!');
+	}
+}
+export default class TemplePlugin extends Plugin {
+	private _service: TempleService;
+
+	// todo: select templates
+	// todo: configure templates directory
+	
+	constructor(app: App, pluginManifest: PluginManifest) {
+		super(app, pluginManifest);
+		
+		this._service = new TempleService();
+    }
 
 	async onload() {
+
+		this._service.register(new FileInfoTempleProvider(this.app.workspace));
+		this._service.register(new DateTimeTempleProvider());
+
 		addIcon('temple', ICON);
-		this.addRibbonIcon('temple', 'Temple', () => {
-			new Notice("this is a notice!");
+		this.addRibbonIcon('temple', 'Temple', async () => {
+
+// 			let file = this.app.workspace.getActiveFile();
+// 			// let activeView = this.app.workspace.getActiveViewOfType(MarkdownView);
+// 			// let editor = activeView.sourceMode.cmEditor;
+// 			// let doc = editor.getDoc();
+// 			let content = await this.app.vault.read(file);
+			console.log(this._service.resolve());
+			let template = `{% for i in range(0, 3) -%}
+my name is {{ file.name }}
+{{ datetime.now }}
+{% endfor -%}
+`;
+			console.log(this._service.render(template))
+// 			let rendered = njk.renderString(template, {
+// 				file
+// 			});
+
+// 			let newContent = content + rendered;
+
+// 			await this.app.vault.modify(file, newContent);
+
+			// let modal = new TagFuzzySuggestModal(this.app);
+			// modal.open();
+
 		})
 	}
 
