@@ -12,9 +12,6 @@ export default class TemplePlugin extends Plugin {
 	private _temple: TempleService;
 	private _obs: ObsidianService;
 	_settings: TempleSettings;
-
-	// todo: select templates
-	// todo: configure templates directory
 	
 	constructor(app: App, pluginManifest: PluginManifest) {
 		super(app, pluginManifest);
@@ -44,79 +41,4 @@ export default class TemplePlugin extends Plugin {
 			}
 		})
 	}
-
-	
-
-	// settings: TempleSettings;
-
-	// async onload() {
-	// 	console.log('loading plugin');
-	// 	debugger;
-
-	// 	await this.loadSettings();
-
-	// 	this.addRibbonIcon('dice', 'Sample Plugin', () => {
-	// 		new Notice('This is a notice!');
-	// 	});
-
-	// 	this.addStatusBarItem().setText('Status Bar Text');
-
-	// 	this.addCommand({
-	// 		id: 'open-sample-modal',
-	// 		name: 'Open Sample Modal',
-	// 		// callback: () => {
-	// 		// 	console.log('Simple Callback');
-	// 		// },
-	// 		checkCallback: (checking: boolean) => {
-	// 			let leaf = this.app.workspace.activeLeaf;
-	// 			if (leaf) {
-	// 				if (!checking) {
-	// 					new SampleModal(this.app).open();
-	// 				}
-	// 				return true;
-	// 			}
-	// 			return false;
-	// 		}
-	// 	});
-
-	// 	this.addSettingTab(new TempleSettingsTab(this.app, this));
-
-	// 	this.registerCodeMirror((cm: CodeMirror.Editor) => {
-	// 		console.log('codemirror', cm);
-	// 	});
-
-	// 	this.registerDomEvent(document, 'click', (evt: MouseEvent) => {
-	// 		console.log('click', evt);
-	// 	});
-
-	// 	this.registerInterval(window.setInterval(() => console.log('setInterval'), 5 * 60 * 1000));
-	// }
-
-	// onunload() {
-	// 	console.log('unloading plugin');
-	// }
-
-	// async loadSettings() {
-	// 	this.settings = Object.assign(DEFAULT_SETTINGS, await this.loadData());
-	// }
-
-	// async saveSettings() {
-	// 	await this.saveData(this.settings);
-	// }
 }
-
-// class SampleModal extends Modal {
-// 	constructor(app: App) {
-// 		super(app);
-// 	}
-
-// 	onOpen() {
-// 		let {contentEl} = this;
-// 		contentEl.setText('Woah!');
-// 	}
-
-// 	onClose() {
-// 		let {contentEl} = this;
-// 		contentEl.empty();
-// 	}
-// }
