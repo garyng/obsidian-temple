@@ -23,6 +23,7 @@ export class TempleSettingsTab extends PluginSettingTab {
 				.setPlaceholder('Example: /_templates')
 				.setValue(this._obs.settings.templatesDir)
 				.onChange(async (value) => {
+					value = value.replace(/^(\/|\\)+|(\/|\\)+$/g, '');
 					this._obs.settings.templatesDir = value;
 					await this._obs.saveSettings();
 				}));
