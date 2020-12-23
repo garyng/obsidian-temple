@@ -1,7 +1,7 @@
 export const DEFAULT_SETTINGS: TempleSettings = {
-	templatesFolder: "/_templates"
+	templatesDir: "/_templates"
 }
 
 export interface TempleSettings {
-    templatesFolder: string;
+    templatesDir: string;
 }

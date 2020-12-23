@@ -17,13 +17,13 @@ export class TempleSettingsTab extends PluginSettingTab {
 		containerEl.createEl('p', { text: this._plugin.manifest.description });
 
 		new Setting(containerEl)
-			.setName('Template folder location')
-			.setDesc('Folder that stores nunjucks templates.')
+			.setName('Templates directory location')
+			.setDesc('Directory that stores nunjucks templates.')
 			.addText(path => path
 				.setPlaceholder('Example: /_templates')
-				.setValue(this._obs.settings.templatesFolder)
+				.setValue(this._obs.settings.templatesDir)
 				.onChange(async (value) => {
-					this._obs.settings.templatesFolder = value;
+					this._obs.settings.templatesDir = value;
 					await this._obs.saveSettings();
 				}));
 
