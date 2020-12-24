@@ -60,8 +60,8 @@ jobs:
       with:
         draft: true
         files: "${{ env.out_dir }}/*"
-        name: ${{ steps.gitversion.outputs.majorMinorPatch }}
-        tag_name: ${{ steps.gitversion.outputs.majorMinorPatch }}
+        name: ${{ steps.gitversion.outputs.fullSemVer }}
+        tag_name: ${{ steps.gitversion.outputs.fullSemVer }}
 
 
     # - name: Upload zip file
