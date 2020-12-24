@@ -1,8 +1,8 @@
 {
 	"id": "obsidian-temple",
 	"name": "Obsidian Temple",
-	"version": "1.0.1",
-	"minAppVersion": "0.9.12",
+	"version": "0.1.0",
+	"minAppVersion": "0.9.22",
 	"description": "A plugin for templating in Obsidian, powered by Nunjucks.",
 	"author": "GaryNg",
 	"authorUrl": "https://github.com/garyng/obsidian-temple",
