@@ -1,45 +1,90 @@
-## Obsidian Sample Plugin
+# obsidian-temple
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+A plugin for templating in Obsidian, powered by [Nunjucks](https://mozilla.github.io/nunjucks/).
 
-This project uses Typescript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in Typescript Definition format, which contains TSDoc comments describing what it does.
+## Configuration
 
-**Note:** The Obsidian API is still in early alpha and is subject to change at any time!
+Set the directory that contains the templates to be used inside Settings:
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Changes the default font color to red using `styles.css`.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+![](docs/settings.png)
 
+## Usages
 
-### Releasing new releases
+You can insert a new template by clicking on the button in the sidebar
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments.
-- Publish the release.
+![](docs/sidebar.png)
 
-### Adding your plugin to the community plugin list
+or via the Command Palette
 
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+![](docs/command-palette.png)
 
-### How to use
+You will be prompted to choose a template if there are multiple defined
 
-- Clone this repo.
-- `npm i` or `yarn` to install dependencies
-- `npm run dev` to start compilation in watch mode.
+![](docs/templates-prompt.png)
 
-### Manually installing the plugin
+## Templating
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+Since `obsidian-temple` uses `nunjucks` under-the-hood, you can use everything supported by `nunjucks`. Check the [official Nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) on how to write `nunjucks` template.
 
-### API Documentation
+### Example: Populating `alias` based on filename with Zettelkasten ID
 
-See https://github.com/obsidianmd/obsidian-api
+```njk
+---
+uid: {{ zettel.uid }}
+alias: "{{ zettel.title }}"
+tags: []
+---
+```
+
+If the filename is `20201224030406 title.md`, then the output of the template will be:
+
+```
+---
+uid: 20201224030406
+alias: "title"
+tags: []
+---
+```
+
+It also works if you have the `uid` as a suffix in the filename, eg: `title 20201224030406.md`.
+
+`zettel` is just one of the objects that are provided by `obsidian-temple`, see [Providers](#providers) for more.
+
+## Providers
+
+`obsidian-temple` currently includes a few providers that can provide the [`context` objects](https://mozilla.github.io/nunjucks/api.html#renderstring) for `nunjucks`:
+- `file`
+- `zettel`
+- `datetime`
+
+You can easily add more providers, see [Adding new provider](#adding-new-provider).
+
+### `file`
+
+Exposes Obsidian's internal [`TFile`](https://github.com/obsidianmd/obsidian-api/blob/d10f2f6efc0d0d7c9bf96cd435ef376b18fbd6d8/obsidian.d.ts#L2206) structure, which means you can use things like `file.name` or `file.basename` in your templates.
+
+### `zettel`
+
+Extracts `uid` and `title` from notes that have the Zettelkasten ID.
+
+## `datetime`
+
+This just returns the current date and time.
+
+## Adding new provider
+
+You need to:
+
+1. create a new context class, `T`
+1. implements `ITempleProvider<T>`
+1. register the provider on load
+
+For example, for the `datetime` provider:
+
+1. the context class is [`DateTimeContext`](https://github.com/garyng/obsidian-temple/blob/57bc5738dbf35df5403947be769f9f8b2694ddaa/src/providers/DateTimeContext.ts)
+1. the provider class is [`DateTimeTempleProvider`](https://github.com/garyng/obsidian-temple/blob/57bc5738dbf35df5403947be769f9f8b2694ddaa/src/providers/DateTimeTempleProvider.ts)
+1. the registration is at [`main.ts`](https://github.com/garyng/obsidian-temple/blob/57bc5738dbf35df5403947be769f9f8b2694ddaa/src/main.ts#L27)
+
+## Alternatives
+
+- [`SilentVoid13/Templater`](https://github.com/SilentVoid13/Templater)
