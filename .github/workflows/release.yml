@@ -1,0 +1,74 @@
+# modified from https://github.com/deathau/workflow-experiments/blob/main/.github/workflows/release.yml
+
+name: Release Obsidian Plugin
+on:
+  push:
+
+env:
+  dist_dir: ./dist/
+  out_dir: ./out/
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Use Node.js
+      uses: actions/setup-node@v1
+      with:
+        node-version: '14.x'
+
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0.9.5
+      with:
+        versionSpec: "5.x"
+
+    - name: Versioning
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v0.9.5
+
+    - name: Update manifest version
+      uses: jossef/action-set-json-field@v1
+      with:
+        file: manifest.json
+        field: version
+        value: ${{ steps.gitversion.outputs.majorMinorPatch }}
+
+    - name: Commit manifest version changes
+      uses: EndBug/add-and-commit@v6
+      with:
+        add: manifest.json
+        message: "build: update version"
+
+    - name: Build
+      id: build
+      run: |
+        npm install
+        npm run build --if-present
+
+    - name: Copy built files
+      id: copy
+      run: |
+        mkdir -p ${{ env.out_dir }}
+        cp -a ${{ env.dist_dir }}. ${{ env.out_dir }}
+      
+    - name: Package
+      run: |
+        zip -r ${{ env.out_dir }}${{ github.event.repository.name }}-${{ steps.gitversion.outputs.majorMinorPatch }}.zip ${{ env.dist_dir }}
+
+    - name: Debug
+      run: |
+        ls ${{ env.out_dir }}
+
+    - name: Release Github
+      uses: softprops/action-gh-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        draft: true
+        files: "${{ env.out_dir }}/*"
+        name: ${{ steps.gitversion.outputs.fullSemVer }}
+        tag_name: ${{ steps.gitversion.outputs.fullSemVer }}
