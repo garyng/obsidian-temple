@@ -31,6 +31,25 @@ jobs:
       id: gitversion
       uses: gittools/actions/gitversion/execute@v0.9.5
 
+    - name: Update manifest version
+      uses: jossef/action-set-json-field@v1
+      with:
+        file: manifest.json
+        field: version
+        value: ${{ steps.gitversion.outputs.majorMinorPatch }}
+
+    - name: Commit manifest version changes
+      uses: EndBug/add-and-commit@v6
+      with:
+        add: manifest.json
+        message: "build: update version"
+        push: false
+
+    - name: Debug manifest
+      run: |
+        cat manifest.json
+        git log -1
+
     - name: Build
       id: build
       run: |
