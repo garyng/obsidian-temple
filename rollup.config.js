@@ -2,6 +2,7 @@ import typescript from "@rollup/plugin-typescript";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import copy from "rollup-plugin-copy";
+import { terser } from "rollup-plugin-terser";
 
 let notesDir = "notes/.obsidian/plugins/obsidian-temple/";
 let distDir = "dist/";
@@ -16,12 +17,13 @@ export default {
   output: [
     {
       dir: distDir,
+      plugins: [terser()],
       ...outputConfig,
     },
     {
       dir: notesDir,
       ...outputConfig,
-    }
+    },
   ],
   external: ["obsidian"],
   plugins: [
