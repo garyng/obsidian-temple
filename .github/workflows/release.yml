@@ -31,11 +31,6 @@ jobs:
       id: gitversion
       uses: gittools/actions/gitversion/execute@v0.9.5
 
-    # - name: Get Version
-    #   id: version
-    #   run: |
-    #     echo "::set-output name=tag::$(git describe --abbrev=0 --tags)"
-
     - name: Build
       id: build
       run: |
@@ -50,25 +45,23 @@ jobs:
       
     - name: Package
       run: |
-        zip -r ${{ env.out_dir }}${{ github.event.repository.name }}.zip ${{ env.dist_dir }}
+        zip -r ${{ env.out_dir }}${{ github.event.repository.name }}-${{ steps.gitversion.outputs.majorMinorPatch }}.zip ${{ env.dist_dir }}
 
     - name: Debug
       run: |
         ls ${{ env.out_dir }}
-        ls ${{ env.dist_dir }}
 
 # todo: update version (MajorMinorPatch)
-# todo: upload artifacts
 
-    # - name: Release Github
-    #   uses: softprops/action-gh-release@master
-    #   env:
-    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    #   with:
-    #     draft: true
-    #     files: "${{ env.artifacts-dir }}/*"
-    #     name: ${{ steps.gitversion.outputs.fullSemVer }}
-    #     tag_name: ${{ steps.gitversion.outputs.fullSemVer }}
+    - name: Release Github
+      uses: softprops/action-gh-release@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        draft: true
+        files: "${{ env.out_dir }}/*"
+        name: ${{ steps.gitversion.outputs.fullSemVer }}
+        tag_name: ${{ steps.gitversion.outputs.fullSemVer }}
 
 
     # - name: Upload zip file
