@@ -67,7 +67,7 @@ Exposes Obsidian's internal [`TFile`](https://github.com/obsidianmd/obsidian-api
 
 Extracts `uid` and `title` from notes that have the Zettelkasten ID.
 
-## `datetime`
+### `datetime`
 
 This just returns the current date and time.
 
