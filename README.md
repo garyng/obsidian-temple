@@ -31,7 +31,7 @@ Since `obsidian-temple` uses `nunjucks` under-the-hood, you can use everything s
 ```njk
 ---
 uid: {{ zettel.uid }}
-alias: "{{ zettel.title }}"
+aliases: ["{{ zettel.title }}"]
 tags: []
 ---
 ```
@@ -41,7 +41,7 @@ If the filename is `20201224030406 title.md`, then the output of the template wi
 ```
 ---
 uid: 20201224030406
-alias: "title"
+aliases: ["title"]
 tags: []
 ---
 ```
