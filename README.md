@@ -1,5 +1,7 @@
 # obsidian-temple
 
+![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/garyng/obsidian-temple?label=release&style=for-the-badge)
+
 A plugin for templating in Obsidian, powered by [Nunjucks](https://mozilla.github.io/nunjucks/).
 
 ## Configuration
@@ -26,11 +28,11 @@ You will be prompted to choose a template if there are multiple defined
 
 Since `obsidian-temple` uses `nunjucks` under-the-hood, you can use everything supported by `nunjucks`. Check the [official Nunjucks documentation](https://mozilla.github.io/nunjucks/templating.html) on how to write `nunjucks` template.
 
-### Example: Populating `alias` based on filename with Zettelkasten ID
+### Example: Populating `aliases` based on filename with Zettelkasten ID
 
 ```njk
 ---
-uid: {{ zettel.uid }}
+uid: "{{ zettel.uid }}"
 aliases: ["{{ zettel.title }}"]
 tags: []
 ---
@@ -40,7 +42,7 @@ If the filename is `20201224030406 title.md`, then the output of the template wi
 
 ```
 ---
-uid: 20201224030406
+uid: "20201224030406"
 aliases: ["title"]
 tags: []
 ---
