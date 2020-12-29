@@ -69,7 +69,7 @@ export class ObsidianService {
 		}
 		let content = await this._obs.app.vault.read(active);
 		let template = await this.readFile(path);
-		var rendered = this._temple.render(template);
+		var rendered = await this._temple.render(template);
 
 		let newContent = content + rendered;
 

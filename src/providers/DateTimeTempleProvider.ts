@@ -5,7 +5,7 @@ import { TempleContext } from './TempleContext';
 export class DateTimeTempleProvider implements ITempleProvider<DateTimeContext> {
 	name: string = "datetime";
 
-	provide(): TempleContext<DateTimeContext> {
+	async provide(): Promise<TempleContext<DateTimeContext>> {
 		return new TempleContext(new DateTimeContext(new Date()));
 	}
 }

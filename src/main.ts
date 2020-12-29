@@ -39,6 +39,6 @@ export default class TemplePlugin extends Plugin {
 			callback: async () => {
 				await this._obs.promptTemplate();
 			}
-		})
+		});
 	}
 }
