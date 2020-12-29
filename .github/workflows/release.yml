@@ -33,7 +33,6 @@ jobs:
       uses: gittools/actions/gitversion/execute@v0.9.5
 
     - name: Update manifest version
-      if: steps.gitversion.outputs.preReleaseTag == ''
       uses: jossef/action-set-json-field@v1
       with:
         file: manifest.json
