@@ -10,7 +10,7 @@ export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
 
     }
 
-    provide(): TempleContext<ZettelContext> {
+    async provide(): Promise<TempleContext<ZettelContext>> {
         let file = this._workspace.getActiveFile();
         if (file == null)
             return null;

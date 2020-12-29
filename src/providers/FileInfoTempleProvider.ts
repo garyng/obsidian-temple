@@ -9,7 +9,7 @@ export class FileInfoTempleProvider implements ITempleProvider<FileInfoContext> 
 	constructor(private _workspace: Workspace) {
 	}
 
-	provide(): TempleContext<FileInfoContext> {
+	async provide(): Promise<TempleContext<FileInfoContext>> {
 		var file = this._workspace.getActiveFile();
 		if (file == null)
 			return null;
