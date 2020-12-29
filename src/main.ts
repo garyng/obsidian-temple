@@ -7,7 +7,7 @@ import { TempleService } from './TempleService';
 import { TempleSettingsTab } from './settings/TempleSettingsTab';
 import { ObsidianService } from './ObsidianService';
 import { TempleSettings } from "./settings/TempleSettings";
-
+import { ClipboardTempleProvider } from './providers/ClipboardTempleProvider';
 export default class TemplePlugin extends Plugin {
 	private _temple: TempleService;
 	private _obs: ObsidianService;
@@ -25,6 +25,7 @@ export default class TemplePlugin extends Plugin {
 		this._temple.register(new FileInfoTempleProvider(this.app.workspace));
 		this._temple.register(new ZettelTempleProvider(this.app.workspace));
 		this._temple.register(new DateTimeTempleProvider());
+		this._temple.register(new ClipboardTempleProvider());
 
 		addIcon('temple', ICON);
 
