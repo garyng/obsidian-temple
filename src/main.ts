@@ -21,15 +21,15 @@ export default class TemplePlugin extends Plugin {
     }
 
 	async onload() {
+		await this._obs.loadSettings();
 
 		this._temple.register(new FileInfoTempleProvider(this.app.workspace));
-		this._temple.register(new ZettelTempleProvider(this.app.workspace));
+		this._temple.register(new ZettelTempleProvider(this.app.workspace, this._obs.settings));
 		this._temple.register(new DateTimeTempleProvider());
 		this._temple.register(new ClipboardTempleProvider());
 
 		addIcon('temple', ICON);
 
-		this._obs.loadSettings();
 		this.addSettingTab(new TempleSettingsTab(this.app, this, this._obs));
 		this.addRibbonIcon('temple', 'Temple', async () => {
 			await this._obs.promptTemplate();

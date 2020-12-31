@@ -1,4 +1,5 @@
 import { Workspace } from 'obsidian';
+import { TempleSettings } from 'src/settings/TempleSettings';
 import { ITempleProvider } from './ITempleProvider';
 import { TempleContext } from './TempleContext';
 import { ZettelContext } from './ZettelContext';
@@ -6,7 +7,7 @@ import { ZettelContext } from './ZettelContext';
 export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
     name: string = "zettel";
 
-    constructor(private _workspace: Workspace) {
+    constructor(private _workspace: Workspace, private _settings: TempleSettings) {
 
     }
 
@@ -18,7 +19,20 @@ export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
         let context = this.extractPrefix(file.basename) 
             ?? this.extractSuffix(file.basename);
 
+        if (this._settings.zettel.regex)
+        {
+            // override if a custom regex is set
+            context = this.extractCustom(file.basename);
+        }
         return new TempleContext(context);
+    }
+
+    /**
+     * use custom regex from settings for extraction
+     */
+    extractCustom(name: string): ZettelContext {
+        let regex = new RegExp(this._settings.zettel.regex, "gm")
+        return this.extract(name, regex);
     }
 
     /**
@@ -37,8 +51,8 @@ export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
 
     extract(name: string, regex: RegExp) {
         let matches = regex.exec(name);
-
-        if (matches == null) return null;
+    
+        if (matches?.groups == null) return null;
         let { groups: { uid, title } } = matches;
 
         return new ZettelContext(uid, title);
