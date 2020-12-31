@@ -25,14 +25,14 @@ export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
      * <uid> <title>
      */
     extractPrefix(name: string): ZettelContext {
-        return this.extract(name, /(?<uid>^\d+)\s(?<title>.*$)/gm);
+        return this.extract(name, /(?<uid>^\d+)(\s(?<title>.*$))?/gm);
     }
 
     /**
      * <title> <uid>
      */
     extractSuffix(name: string): ZettelContext {
-        return this.extract(name, /(?<title>^.*)\s(?<uid>\d+$)/gm);
+        return this.extract(name, /((?<title>^.*)\s)?(?<uid>\d+$)/gm);
     }
 
     extract(name: string, regex: RegExp) {
