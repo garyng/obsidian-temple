@@ -40,6 +40,7 @@ jobs:
         value: ${{ steps.gitversion.outputs.majorMinorPatch }}
 
     - name: Commit manifest version changes
+      if: steps.gitversion.outputs.preReleaseTag == ''
       uses: EndBug/add-and-commit@v6
       with:
         add: manifest.json
