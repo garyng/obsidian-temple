@@ -58,6 +58,7 @@ It also works if you have the `uid` as a suffix in the filename, eg: `title 2020
 - `file`
 - `zettel`
 - `datetime`
+- `clipboard`
 
 You can easily add more providers, see [Adding new provider](#adding-new-provider).
 
@@ -72,6 +73,10 @@ Extracts `uid` and `title` from notes that have the Zettelkasten ID.
 ### `datetime`
 
 This just returns the current date and time.
+
+### `clipboard`
+
+Extract text data from your system clipboard. Uses [`sindresorhus/clipboardy`](https://github.com/sindresorhus/clipboardy).
 
 ## Adding new provider
 

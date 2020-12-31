@@ -23,8 +23,19 @@ export class TempleSettingsTab extends PluginSettingTab {
 				.setPlaceholder('Example: /_templates')
 				.setValue(this._obs.settings.templatesDir)
 				.onChange(async (value) => {
+					// trim / and \ from both ends
 					value = value.replace(/^(\/|\\)+|(\/|\\)+$/g, '');
 					this._obs.settings.templatesDir = value;
+					await this._obs.saveSettings();
+				}));
+
+		new Setting(containerEl)
+			.setName('Override zettel extraction regex')
+			.setDesc('Override the regex for extracting UID and title from filename. Regex must return capture groups named "uid" and "title". For example: (?<uid>^\\d+)(\\s(?<title>.*$))?')
+			.addText(regex => regex
+				.setValue(this._obs.settings.zettel.regex)
+				.onChange(async (value) => {
+					this._obs.settings.zettel.regex = value;
 					await this._obs.saveSettings();
 				}));
 
