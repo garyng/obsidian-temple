@@ -12,9 +12,10 @@
     "lib": [
       "dom",
       "es5",
+      "es6",
       "scripthost",
       "es2015",
-      "es6"
+      "es2018"
     ],
     "types": ["reflect-metadata"],
     "experimentalDecorators": true,

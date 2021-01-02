@@ -1,7 +1,9 @@
 import { ITempleProvider } from './ITempleProvider';
 import { DateTimeContext } from './DateTimeContext';
 import { TempleContext } from './TempleContext';
+import { injectable } from 'inversify';
 
+@injectable()
 export class DateTimeTempleProvider implements ITempleProvider<DateTimeContext> {
 	name: string = "datetime";
 
