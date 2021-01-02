@@ -1,24 +1,7 @@
-import { App, FuzzySuggestModal, Notice, Plugin, TFile, TFolder, Vault } from 'obsidian';
+import { Notice, Plugin, TFile, TFolder, Vault } from 'obsidian';
 import { DEFAULT_SETTINGS, TempleSettings } from './settings/TempleSettings';
+import { TempleFuzzySuggestModal } from './TempleFuzzySuggestModal';
 import { TempleService } from './TempleService';
-
-class TempleFuzzySuggestModal extends FuzzySuggestModal<string> {
-
-	constructor(app: App, private _obs: ObsidianService) {
-		super(app);
-	}
-
-	getItems(): string[] {
-		return this._obs.getTemplatePaths();
-	}
-	getItemText(item: string): string {
-		return item;
-	}
-	onChooseItem(item: string, evt: MouseEvent | KeyboardEvent): void {
-		this._obs.insertTemplate(item);
-	}
-}
-
 
 export class ObsidianService {
 	public settings: TempleSettings;
