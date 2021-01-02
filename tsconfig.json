@@ -14,12 +14,8 @@
       "es5",
       "es6",
       "scripthost",
-      "es2015",
-      "es2018"
-    ],
-    "types": ["reflect-metadata"],
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+      "es2015"
+    ]
   },
   "include": [
     "**/*.ts"

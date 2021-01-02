@@ -26,9 +26,7 @@
   },
   "dependencies": {
     "clipboardy": "^2.3.0",
-    "inversify": "^5.0.5",
     "lodash": "^4.17.20",
-    "nunjucks": "^3.2.2",
-    "reflect-metadata": "^0.1.13"
+    "nunjucks": "^3.2.2"
   }
 }
