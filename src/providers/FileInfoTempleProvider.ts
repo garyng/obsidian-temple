@@ -2,7 +2,9 @@ import { Workspace } from 'obsidian';
 import { ITempleProvider } from './ITempleProvider';
 import { FileInfoContext } from './FileInfoContext';
 import { TempleContext } from './TempleContext';
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class FileInfoTempleProvider implements ITempleProvider<FileInfoContext> {
 	name: string = "file";
 

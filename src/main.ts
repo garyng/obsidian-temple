@@ -10,14 +10,16 @@ import { ObsidianService } from './ObsidianService';
 import { TempleSettings } from "./settings/TempleSettings";
 import { ClipboardTempleProvider } from './providers/ClipboardTempleProvider';
 import { ITempleProvider } from "./providers/ITempleProvider";
+import { container, inject, injectable } from "tsyringe";
 
 const Symbols = {
 	TempleSettings: Symbol.for('TempleSettings'),
 	ITempleProvider: Symbol.for('ITempleProvider<any>')
 }
 
+@injectable()
 class TestSettings {
-	constructor(private _providers: ITempleProvider<any>[]) {
+	constructor(@inject(Symbols.ITempleProvider) private _providers: ITempleProvider<any>[]) {
 		_providers.forEach(p => console.log(p.name));
 	}
 }
@@ -38,6 +40,10 @@ export default class TemplePlugin extends Plugin {
 	async onload() {
 		
 		await this._obs.loadSettings();
+
+		container.register<ITempleProvider<any>>(Symbols.ITempleProvider, {
+			useClass: FileInfoTempleProvider
+		});
 		
 		
 		// const container = new Container();

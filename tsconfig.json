@@ -15,7 +15,9 @@
       "es6",
       "scripthost",
       "es2015"
-    ]
+    ],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "**/*.ts"
