@@ -9,7 +9,6 @@ import { TempleSettingsTab } from './settings/TempleSettingsTab';
 import { ObsidianService } from './ObsidianService';
 import { TempleSettings } from "./settings/TempleSettings";
 import { ClipboardTempleProvider } from './providers/ClipboardTempleProvider';
-import { Container, inject, injectable, multiInject } from "inversify";
 import { ITempleProvider } from "./providers/ITempleProvider";
 
 const Symbols = {
@@ -17,9 +16,8 @@ const Symbols = {
 	ITempleProvider: Symbol.for('ITempleProvider<any>')
 }
 
-@injectable()
 class TestSettings {
-	constructor(@multiInject(Symbols.ITempleProvider) private _providers: ITempleProvider<any>[]) {
+	constructor(private _providers: ITempleProvider<any>[]) {
 		_providers.forEach(p => console.log(p.name));
 	}
 }
@@ -42,15 +40,15 @@ export default class TemplePlugin extends Plugin {
 		await this._obs.loadSettings();
 		
 		
-		const container = new Container();
-		container.bind<TempleSettings>(Symbols.TempleSettings).toConstantValue(this._obs.settings);
-		container.bind<Workspace>(Workspace).toConstantValue(this.app.workspace);
+		// const container = new Container();
+		// container.bind<TempleSettings>(Symbols.TempleSettings).toConstantValue(this._obs.settings);
+		// container.bind<Workspace>(Workspace).toConstantValue(this.app.workspace);
 
-		container.bind<TestSettings>(TestSettings).toSelf();
-		container.bind<ITempleProvider<any>>(Symbols.ITempleProvider).to(FileInfoTempleProvider);
-		container.bind<ITempleProvider<any>>(Symbols.ITempleProvider).to(DateTimeTempleProvider);
+		// container.bind<TestSettings>(TestSettings).toSelf();
+		// container.bind<ITempleProvider<any>>(Symbols.ITempleProvider).to(FileInfoTempleProvider);
+		// container.bind<ITempleProvider<any>>(Symbols.ITempleProvider).to(DateTimeTempleProvider);
 
-		container.get(TestSettings);
+		// container.get(TestSettings);
 
 
 		// todo: inject as self, and as multiple
