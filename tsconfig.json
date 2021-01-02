@@ -13,8 +13,12 @@
       "dom",
       "es5",
       "scripthost",
-      "es2015"
-    ]
+      "es2015",
+      "es6"
+    ],
+    "types": ["reflect-metadata"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": [
     "**/*.ts"
