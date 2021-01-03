@@ -1,4 +1,4 @@
-import { MarkdownView, Notice, Plugin_2, TFile, TFolder, Vault } from 'obsidian';
+import { MarkdownSourceView, MarkdownView, Notice, Plugin_2, TFile, TFolder, Vault } from 'obsidian';
 import { inject, injectable } from 'tsyringe';
 import { TempleSettings } from './settings/TempleSettings';
 import { Symbols } from './Symbols';
@@ -59,6 +59,14 @@ export class ObsidianService {
 			const doc = editor.getDoc();
 			doc.replaceSelection(text);
 		}
+	}
+
+	/**
+	 * Insert the documentation of all providers.
+	 */
+	public async insertDocs(): Promise<void> {
+		const doc = await this._temple.renderDoc();
+		this.insertAtCursor(doc);
 	}
 
 	public async readFile(path: string): Promise<string> {

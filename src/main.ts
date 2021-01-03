@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { addIcon, App, Plugin, PluginManifest, Plugin_2, Workspace } from 'obsidian';
+import { addIcon, App, MarkdownSourceView, MarkdownView, Plugin, PluginManifest, Plugin_2, Workspace } from 'obsidian';
 import { ICON } from './constants';
 import { FileInfoTempleProvider } from './providers/FileInfoTempleProvider';
 import { DateTimeTempleProvider } from './providers/DateTimeTempleProvider';
@@ -16,16 +16,16 @@ import { container } from 'tsyringe';
 import { Symbols } from './Symbols';
 import { DateTimeProvider } from './providers/DateTimeProvider';
 
-export default class TemplePlugin extends Plugin {	
+export default class TemplePlugin extends Plugin {
 	constructor(app: App, pluginManifest: PluginManifest) {
 		super(app, pluginManifest);
 	}
 
 	async onload(): Promise<void> {
-		
+
 		container.registerInstance<Plugin_2>(Symbols.Plugin, this);
 		container.registerSingleton<TempleSettingsProvider>(TempleSettingsProvider, TempleSettingsProvider);
-		
+
 		const settingsProvider = container.resolve<TempleSettingsProvider>(TempleSettingsProvider);
 		await settingsProvider.load();
 
@@ -34,7 +34,7 @@ export default class TemplePlugin extends Plugin {
 
 		container.registerInstance<TempleSettings>(Symbols.TempleSettings, settingsProvider.value);
 		container.registerSingleton<TempleSettingsTab>(TempleSettingsTab, TempleSettingsTab);
-		
+
 		container.registerSingleton<DateTimeProvider>(DateTimeProvider);
 		container.registerSingleton<DateTimeFilters>(DateTimeFilters);
 
@@ -45,7 +45,7 @@ export default class TemplePlugin extends Plugin {
 		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, ClipboardTempleProvider);
 
 		const obs = container.resolve<ObsidianService>(ObsidianService);
-		
+
 		addIcon('temple', ICON);
 
 		this.addSettingTab(container.resolve<TempleSettingsTab>(TempleSettingsTab));
@@ -59,5 +59,13 @@ export default class TemplePlugin extends Plugin {
 				await obs.promptTemplate();
 			}
 		});
-	}	
+
+		this.addCommand({
+			id: 'obsidian-temple-insert-doc',
+			name: 'Insert documentation of all providers',
+			callback: async () => {
+				await obs.insertDocs();
+			}
+		});
+	}
 }
