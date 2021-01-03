@@ -3,6 +3,7 @@ import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 import copy from "rollup-plugin-copy";
 import { terser } from "rollup-plugin-terser";
+import filesize from 'rollup-plugin-filesize';
 
 let notesDir = "notes/.obsidian/plugins/obsidian-temple/";
 let distDir = "dist/";
@@ -30,6 +31,7 @@ export default {
     typescript(),
     nodeResolve({ browser: true }),
     commonjs(),
+    filesize(),
     copy({
       copyOnce: false,
       targets: [
