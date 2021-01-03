@@ -12,10 +12,10 @@ export class TempleSettingsProvider {
 
     public async load() {
         this.value = Object.assign(DEFAULT_SETTINGS, await this._plugin.loadData());
+        
     }
 
     public async save() {
         await this._plugin.saveData(this.value);
     }
-
 }

@@ -13,6 +13,7 @@ import { ClipboardTempleProvider } from './providers/ClipboardTempleProvider';
 import { ITempleProvider } from "./providers/ITempleProvider";
 import { container } from "tsyringe";
 import { Symbols } from "./Symbols";
+import { DateTimeProvider } from "./providers/DateTimeProvider";
 
 export default class TemplePlugin extends Plugin {	
 	constructor(app: App, pluginManifest: PluginManifest) {
@@ -32,6 +33,8 @@ export default class TemplePlugin extends Plugin {
 
 		container.registerInstance<TempleSettings>(Symbols.TempleSettings, settingsProvider.value);
 		container.registerSingleton<TempleSettingsTab>(TempleSettingsTab, TempleSettingsTab);
+		
+		container.registerSingleton<DateTimeProvider>(DateTimeProvider);
 
 		container.registerSingleton<TempleService>(TempleService, TempleService);
 		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, FileInfoTempleProvider);
@@ -40,7 +43,7 @@ export default class TemplePlugin extends Plugin {
 		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, ClipboardTempleProvider);
 
 		let obs = container.resolve<ObsidianService>(ObsidianService);
-
+		
 		addIcon('temple', ICON);
 
 		this.addSettingTab(container.resolve<TempleSettingsTab>(TempleSettingsTab));
