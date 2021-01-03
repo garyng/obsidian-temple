@@ -17,8 +17,7 @@
       "es2015"
     ],
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "esModuleInterop": true
+    "emitDecoratorMetadata": true
   },
   "include": [
     "**/*.ts"
