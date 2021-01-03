@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { addIcon, App, FuzzySuggestModal, MarkdownView, Modal, Notice, Plugin, PluginManifest, TFolder, Vault, Workspace } from 'obsidian';
+import { addIcon, App, Plugin, PluginManifest, Plugin_2, Workspace } from 'obsidian';
 import { ICON } from './constants';
 import { FileInfoTempleProvider } from './providers/FileInfoTempleProvider';
 import { DateTimeTempleProvider } from './providers/DateTimeTempleProvider';
@@ -8,70 +8,51 @@ import { TempleService } from './TempleService';
 import { TempleSettingsTab } from './settings/TempleSettingsTab';
 import { ObsidianService } from './ObsidianService';
 import { TempleSettings } from "./settings/TempleSettings";
+import { TempleSettingsProvider } from "./settings/TempleSettingsProvider";
 import { ClipboardTempleProvider } from './providers/ClipboardTempleProvider';
 import { ITempleProvider } from "./providers/ITempleProvider";
-import { container, inject, injectable } from "tsyringe";
+import { container } from "tsyringe";
+import { Symbols } from "./Symbols";
 
-@injectable()
-class TestSettings {
-	constructor(@inject(Symbols.ITempleProvider) private _providers: ITempleProvider<any>[]) {
-		_providers.forEach(p => console.log(p.name));
-	}
-}
-
-export default class TemplePlugin extends Plugin {
-	private _temple: TempleService;
-	private _obs: ObsidianService;
-	_settings: TempleSettings;
-	
+export default class TemplePlugin extends Plugin {	
 	constructor(app: App, pluginManifest: PluginManifest) {
 		super(app, pluginManifest);
-		
-		// todo: inject service as well?
-		this._temple = new TempleService();
-		this._obs = new ObsidianService(this, this._temple);
 	}
 
 	async onload() {
 		
-		await this._obs.loadSettings();
-
-		container.register<ITempleProvider<any>>(Symbols.ITempleProvider, {
-			useClass: FileInfoTempleProvider
-		});
+		container.registerInstance<Plugin_2>(Symbols.Plugin, this);
+		container.registerSingleton<TempleSettingsProvider>(TempleSettingsProvider, TempleSettingsProvider);
 		
+		var settingsProvider = container.resolve<TempleSettingsProvider>(TempleSettingsProvider);
+		await settingsProvider.load();
 
-		// const container = new Container();
-		// container.bind<TempleSettings>(Symbols.TempleSettings).toConstantValue(this._obs.settings);
-		// container.bind<Workspace>(Workspace).toConstantValue(this.app.workspace);
+		container.registerInstance<App>(App, this.app);
+		container.registerInstance<Workspace>(Workspace, this.app.workspace);
 
-		// container.bind<TestSettings>(TestSettings).toSelf();
-		// container.bind<ITempleProvider<any>>(Symbols.ITempleProvider).to(FileInfoTempleProvider);
-		// container.bind<ITempleProvider<any>>(Symbols.ITempleProvider).to(DateTimeTempleProvider);
+		container.registerInstance<TempleSettings>(Symbols.TempleSettings, settingsProvider.value);
+		container.registerSingleton<TempleSettingsTab>(TempleSettingsTab, TempleSettingsTab);
 
-		// container.get(TestSettings);
+		container.registerSingleton<TempleService>(TempleService, TempleService);
+		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, FileInfoTempleProvider);
+		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, DateTimeTempleProvider);
+		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, ZettelTempleProvider);
+		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, ClipboardTempleProvider);
 
-
-		// todo: inject as self, and as multiple
-		// todo: resolve many and bulk register
-		// or maybe just do it inside `TempleService` 
-		this._temple.register(new FileInfoTempleProvider(this.app.workspace));
-		this._temple.register(new ZettelTempleProvider(this.app.workspace, this._obs.settings));
-		this._temple.register(new DateTimeTempleProvider());
-		this._temple.register(new ClipboardTempleProvider());
+		let obs = container.resolve<ObsidianService>(ObsidianService);
 
 		addIcon('temple', ICON);
 
-		this.addSettingTab(new TempleSettingsTab(this.app, this, this._obs));
+		this.addSettingTab(container.resolve<TempleSettingsTab>(TempleSettingsTab));
 		this.addRibbonIcon('temple', 'Temple', async () => {
-			await this._obs.promptTemplate();
+			await obs.promptTemplate();
 		});
 		this.addCommand({
 			id: 'obsidian-temple-insert',
 			name: 'Insert template',
 			callback: async () => {
-				await this._obs.promptTemplate();
+				await obs.promptTemplate();
 			}
 		});
-	}
+	}	
 }
