@@ -12,11 +12,6 @@ import { ClipboardTempleProvider } from './providers/ClipboardTempleProvider';
 import { ITempleProvider } from "./providers/ITempleProvider";
 import { container, inject, injectable } from "tsyringe";
 
-const Symbols = {
-	TempleSettings: Symbol.for('TempleSettings'),
-	ITempleProvider: Symbol.for('ITempleProvider<any>')
-}
-
 @injectable()
 class TestSettings {
 	constructor(@inject(Symbols.ITempleProvider) private _providers: ITempleProvider<any>[]) {
@@ -45,7 +40,7 @@ export default class TemplePlugin extends Plugin {
 			useClass: FileInfoTempleProvider
 		});
 		
-		
+
 		// const container = new Container();
 		// container.bind<TempleSettings>(Symbols.TempleSettings).toConstantValue(this._obs.settings);
 		// container.bind<Workspace>(Workspace).toConstantValue(this.app.workspace);
