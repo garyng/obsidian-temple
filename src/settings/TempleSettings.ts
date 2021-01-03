@@ -1,7 +1,11 @@
 export const DEFAULT_SETTINGS: TempleSettings = {
-    templatesDir: "/_templates",
+    templatesDir: '/_templates',
     zettel: {
-        regex: ""
+        regex: ''
+    },
+    datetime: {
+        locale: '',
+        timezone: ''
     }
 }
 
@@ -10,4 +14,8 @@ export interface TempleSettings {
     zettel: {
         regex: string
     };
+    datetime: {
+        locale: string,
+        timezone: string
+    }
 }

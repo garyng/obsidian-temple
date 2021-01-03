@@ -1,43 +1,78 @@
-import { App, PluginSettingTab, Setting } from 'obsidian';
-import TemplePlugin from '../main';
-import { ObsidianService } from '../ObsidianService';
+import { DateTime } from 'luxon';
+import { App, PluginSettingTab, Plugin_2, Setting } from 'obsidian';
+import { Symbols } from 'src/Symbols';
+import { inject, injectable } from 'tsyringe';
+import { TempleSettingsProvider } from './TempleSettingsProvider';
 
+@injectable()
 export class TempleSettingsTab extends PluginSettingTab {
 
-	constructor(app: App, private _plugin: TemplePlugin, private _obs: ObsidianService) {
+	constructor(app: App, @inject(Symbols.Plugin) private _plugin: Plugin_2, private _settings: TempleSettingsProvider) {
 		super(app, _plugin);
 	}
 
 	display(): void {
-		let { containerEl } = this;
+		const { containerEl: e } = this;
 
-		containerEl.empty();
+		e.empty();
 
-		containerEl.createEl('h2', { text: this._plugin.manifest.id });
-		containerEl.createEl('p', { text: this._plugin.manifest.description });
+		e.createEl('h1', { text: this._plugin.manifest.id });
+		e.createEl('p', { text: this._plugin.manifest.description });
+		e.createEl('br');
 
-		new Setting(containerEl)
+		this.createSection(e, 'common');
+
+		new Setting(e)
 			.setName('Templates directory location')
 			.setDesc('Directory that stores nunjucks templates.')
 			.addText(path => path
 				.setPlaceholder('Example: /_templates')
-				.setValue(this._obs.settings.templatesDir)
+				.setValue(this._settings.value.templatesDir)
 				.onChange(async (value) => {
 					// trim / and \ from both ends
 					value = value.replace(/^(\/|\\)+|(\/|\\)+$/g, '');
-					this._obs.settings.templatesDir = value;
-					await this._obs.saveSettings();
+					this._settings.value.templatesDir = value;
+					await this._settings.save();
 				}));
 
-		new Setting(containerEl)
-			.setName('Override zettel extraction regex')
+		this.createSection(e, 'zettel');
+
+		new Setting(e)
+			.setName('Override extraction regex')
 			.setDesc('Override the regex for extracting UID and title from filename. Regex must return capture groups named "uid" and "title". For example: (?<uid>^\\d+)(\\s(?<title>.*$))?')
 			.addText(regex => regex
-				.setValue(this._obs.settings.zettel.regex)
+				.setValue(this._settings.value.zettel.regex)
 				.onChange(async (value) => {
-					this._obs.settings.zettel.regex = value;
-					await this._obs.saveSettings();
+					this._settings.value.zettel.regex = value;
+					await this._settings.save();
 				}));
 
+		e.createEl('h3', { text: 'datetime' });
+
+		new Setting(e)
+			.setName('Override timezone')
+			.setDesc(`Defaults to system timezone ("${DateTime.local().zoneName}").`)
+			.addText(tz => tz
+				.setValue(this._settings.value.datetime.timezone)
+				.onChange(async (value) => {
+					this._settings.value.datetime.timezone = value;
+					await this._settings.save();
+				}));
+
+		new Setting(e)
+			.setName('Override locale')
+			.setDesc(`Defaults to system local ("${DateTime.local().locale}").`)
+			.addText(tz => tz
+				.setValue(this._settings.value.datetime.locale)
+				.onChange(async (value) => {
+					this._settings.value.datetime.locale = value;
+					await this._settings.save();
+				}));
+
+	}
+
+
+	private createSection(e: HTMLElement, title: string) {
+		e.createEl('h3', { text: title });
 	}
 }
