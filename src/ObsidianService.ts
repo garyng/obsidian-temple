@@ -1,4 +1,4 @@
-import { Notice, Plugin_2, TFile, TFolder, Vault } from 'obsidian';
+import { MarkdownView, Notice, Plugin_2, TFile, TFolder, Vault } from 'obsidian';
 import { inject, injectable } from 'tsyringe';
 import { TempleSettings } from './settings/TempleSettings';
 import { Symbols } from './Symbols';
@@ -46,19 +46,19 @@ export class ObsidianService {
 	 * Render and insert the selected template.
 	 */
 	public async insertTemplate(path: string): Promise<void> {
-
-		const active = this._obs.app.workspace.getActiveFile();
-		if (active == null) {
-			new Notice('No active file!');
-			return;
-		}
-		const content = await this._obs.app.vault.read(active);
 		const template = await this.readFile(path);
 		const rendered = await this._temple.render(template);
 
-		const newContent = content + rendered;
+		this.insertAtCursor(rendered);
+	}
 
-		await this._obs.app.vault.modify(active, newContent);
+	private insertAtCursor(text: string): void {
+		const view = this._obs.app.workspace.getActiveViewOfType(MarkdownView);
+		if (view) {
+			const editor = view.sourceMode.cmEditor;
+			const doc = editor.getDoc();
+			doc.replaceSelection(text);
+		}
 	}
 
 	public async readFile(path: string): Promise<string> {
