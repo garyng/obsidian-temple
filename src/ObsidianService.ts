@@ -54,7 +54,7 @@ export class ObsidianService {
 
 	private insertAtCursor(text: string): void {
 		const view = this._obs.app.workspace.getActiveViewOfType(MarkdownView);
-		if (view) {
+		if (view && view.currentMode instanceof MarkdownSourceView) {
 			const editor = view.sourceMode.cmEditor;
 			const doc = editor.getDoc();
 			doc.replaceSelection(text);
