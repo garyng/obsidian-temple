@@ -114,35 +114,56 @@ extension: md
 
 # `datetime`
 
-Returns the current date and time.
+Returns the current date and time as Luxon [`DateTime`](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/e5e63b56d6bb52a95cc5e7cfadc5d1bec3023f14/types/luxon/index.d.ts#L151).
 
 ## Usage
 
 ```
 now: {{ datetime.now }}
+
+day: {{ datetime.now.day }}
+month: {{ datetime.now.month }}
+year: {{ datetime.now.year }}
+
+hour: {{ datetime.now.hour }}
+minute: {{ datetime.now.minute }}
+second: {{ datetime.now.second }}
 ```
 
 outputs:
 
 ```
-now: 2021-01-03T21:25:38.285+08:00
+now: 2021-01-03T22:21:36.585+08:00
+
+day: 3
+month: 1
+year: 2021
+
+hour: 22
+minute: 21
+second: 36
 ```
+
 
 ## Formatting with `dateFormat` filter
 
 `dateFormat` uses [Luxon](https://moment.github.io/luxon/index.html) under-the-hood for date formatting. For example:
 
 ```
-now (in ISO 8601): {{ datetime.now | dateFormat("YYYY-MM-DDTHH:mm:ssZ") }}
+now: {{ datetime.now | dateFormat("ffff") }}
 ```
 
 outputs:
 
 ```
-now (in ISO 8601): YYYY-01-Jan 3, 202121:2521:25:38+8
+now: Sunday, January 3, 2021, 10:21 PM Singapore Standard Time
 ```
 
 See [Luxon's documentation](https://moment.github.io/luxon/docs/manual/formatting.html#table-of-tokens) for a complete list of formatting tokens that can be used.
+
+# Settings
+
+You can override the default locale and timezone under Settings.
 
 ---
 
@@ -186,5 +207,5 @@ text: {{ clipboard.text }}
 outputs:
 
 ```
-text: <content>
+text: content
 ```
