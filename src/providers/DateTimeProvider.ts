@@ -7,14 +7,21 @@ import { DateTime } from "luxon";
 @injectable()
 export class DateTimeProvider {
 	constructor(@inject(Symbols.TempleSettings) private _settings: TempleSettings) { }
-	now(): DateTime {
-		let datetime = DateTime.local();
+
+	public now(): DateTime {
+		return this.apply(DateTime.local());
+	}
+
+	/**
+	 * Apply locale and timezone settings
+	 */
+	public apply(dt: DateTime): DateTime {
 		if (this._settings.datetime.locale) {
-			datetime = datetime.setLocale(this._settings.datetime.locale);
+			dt = dt.setLocale(this._settings.datetime.locale);
 		}
 		if (this._settings.datetime.timezone) {
-			datetime = datetime.setZone(this._settings.datetime.timezone);
+			dt = dt.setZone(this._settings.datetime.timezone);
 		}
-		return datetime;
+		return dt;
 	}
 }

@@ -5,6 +5,7 @@ import { FileInfoTempleProvider } from './providers/FileInfoTempleProvider';
 import { DateTimeTempleProvider } from './providers/DateTimeTempleProvider';
 import { ZettelTempleProvider } from './providers/ZettelTempleProvider';
 import { TempleService } from './TempleService';
+import { DateTimeFilters } from "./providers/DateTimeFilters";
 import { TempleSettingsTab } from './settings/TempleSettingsTab';
 import { ObsidianService } from './ObsidianService';
 import { TempleSettings } from "./settings/TempleSettings";
@@ -20,12 +21,12 @@ export default class TemplePlugin extends Plugin {
 		super(app, pluginManifest);
 	}
 
-	async onload() {
+	async onload(): Promise<void> {
 		
 		container.registerInstance<Plugin_2>(Symbols.Plugin, this);
 		container.registerSingleton<TempleSettingsProvider>(TempleSettingsProvider, TempleSettingsProvider);
 		
-		var settingsProvider = container.resolve<TempleSettingsProvider>(TempleSettingsProvider);
+		const settingsProvider = container.resolve<TempleSettingsProvider>(TempleSettingsProvider);
 		await settingsProvider.load();
 
 		container.registerInstance<App>(App, this.app);
@@ -35,6 +36,7 @@ export default class TemplePlugin extends Plugin {
 		container.registerSingleton<TempleSettingsTab>(TempleSettingsTab, TempleSettingsTab);
 		
 		container.registerSingleton<DateTimeProvider>(DateTimeProvider);
+		container.registerSingleton<DateTimeFilters>(DateTimeFilters);
 
 		container.registerSingleton<TempleService>(TempleService, TempleService);
 		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, FileInfoTempleProvider);
@@ -42,7 +44,7 @@ export default class TemplePlugin extends Plugin {
 		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, ZettelTempleProvider);
 		container.registerSingleton<ITempleProvider<any>>(Symbols.ITempleProvider, ClipboardTempleProvider);
 
-		let obs = container.resolve<ObsidianService>(ObsidianService);
+		const obs = container.resolve<ObsidianService>(ObsidianService);
 		
 		addIcon('temple', ICON);
 
