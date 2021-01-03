@@ -31,7 +31,9 @@ export default {
     typescript(),
     nodeResolve({ browser: true }),
     commonjs(),
-    filesize(),
+    filesize({
+      showGzippedSize: false
+    }),
     copy({
       copyOnce: false,
       targets: [
