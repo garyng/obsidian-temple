@@ -2,8 +2,6 @@ import { injectable } from 'tsyringe';
 import { DateTime } from 'luxon';
 import { DateTimeProvider } from './DateTimeProvider';
 
-
-
 @injectable()
 export class DateTimeFilters {
 

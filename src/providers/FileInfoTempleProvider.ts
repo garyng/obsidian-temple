@@ -6,13 +6,13 @@ import { injectable } from 'tsyringe';
 
 @injectable()
 export class FileInfoTempleProvider implements ITempleProvider<FileInfoContext> {
-	name: string = "file";
+	name = 'file';
 
 	constructor(private _workspace: Workspace) {
 	}
 
 	async provide(): Promise<TempleContext<FileInfoContext>> {
-		var file = this._workspace.getActiveFile();
+		const file = this._workspace.getActiveFile();
 		if (file == null)
 			return null;
 		return new TempleContext(file);

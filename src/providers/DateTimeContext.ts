@@ -1,4 +1,4 @@
-import { DateTime } from "luxon";
+import { DateTime } from 'luxon';
 
 export class DateTimeContext {
 	constructor(public now: DateTime) { }

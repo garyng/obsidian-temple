@@ -8,14 +8,14 @@ import { ZettelContext } from './ZettelContext';
 
 @injectable()
 export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
-    name: string = "zettel";
+    name = 'zettel';
 
     constructor(private _workspace: Workspace, @inject(Symbols.TempleSettings) private _settings: TempleSettings) {
 
     }
 
     async provide(): Promise<TempleContext<ZettelContext>> {
-        let file = this._workspace.getActiveFile();
+        const file = this._workspace.getActiveFile();
         if (file == null)
             return null;
 
@@ -34,7 +34,7 @@ export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
      * use custom regex from settings for extraction
      */
     extractCustom(name: string): ZettelContext {
-        let regex = new RegExp(this._settings.zettel.regex, "gm")
+        const regex = new RegExp(this._settings.zettel.regex, 'gm')
         return this.extract(name, regex);
     }
 
@@ -52,11 +52,11 @@ export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
         return this.extract(name, /((?<title>^.*)\s)?(?<uid>\d+$)/gm);
     }
 
-    extract(name: string, regex: RegExp) {
-        let matches = regex.exec(name);
+    extract(name: string, regex: RegExp): ZettelContext {
+        const matches = regex.exec(name);
     
         if (matches?.groups == null) return null;
-        let { groups: { uid, title } } = matches;
+        const { groups: { uid, title } } = matches;
 
         return new ZettelContext(uid, title);
     }

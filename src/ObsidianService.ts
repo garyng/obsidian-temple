@@ -16,8 +16,8 @@ export class ObsidianService {
 	/**
 	 * Ask user to select a template if there are multiple defined.
 	 */
-	public async promptTemplate() {
-		let templates = this.getTemplatePaths();
+	public async promptTemplate(): Promise<void> {
+		const templates = this.getTemplatePaths();
 		if (templates.length > 1) {
 			this._prompt.open();
 		} else {
@@ -29,8 +29,8 @@ export class ObsidianService {
 	 * Get the paths of all templates defined in the template directory.
 	 */
 	public getTemplatePaths(): string[] {
-		let templates: string[] = [];
-		let dir = this._obs.app.vault.getAbstractFileByPath(this._settings.templatesDir);
+		const templates: string[] = [];
+		const dir = this._obs.app.vault.getAbstractFileByPath(this._settings.templatesDir);
 		if (dir instanceof TFolder) {
 			Vault.recurseChildren(dir, file => {
 				if (file instanceof TFile) {
@@ -45,24 +45,24 @@ export class ObsidianService {
 	/**
 	 * Render and insert the selected template.
 	 */
-	public async insertTemplate(path: string) {
+	public async insertTemplate(path: string): Promise<void> {
 
-		let active = this._obs.app.workspace.getActiveFile();
+		const active = this._obs.app.workspace.getActiveFile();
 		if (active == null) {
-			new Notice("No active file!");
+			new Notice('No active file!');
 			return;
 		}
-		let content = await this._obs.app.vault.read(active);
-		let template = await this.readFile(path);
-		var rendered = await this._temple.render(template);
+		const content = await this._obs.app.vault.read(active);
+		const template = await this.readFile(path);
+		const rendered = await this._temple.render(template);
 
-		let newContent = content + rendered;
+		const newContent = content + rendered;
 
 		await this._obs.app.vault.modify(active, newContent);
 	}
 
 	public async readFile(path: string): Promise<string> {
-		let file = this._obs.app.vault.getAbstractFileByPath(path);
+		const file = this._obs.app.vault.getAbstractFileByPath(path);
 		if (file instanceof TFile) {
 			return await this._obs.app.vault.read(file);
 		} else {

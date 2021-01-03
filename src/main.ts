@@ -1,20 +1,20 @@
-import "reflect-metadata";
+import 'reflect-metadata';
 import { addIcon, App, Plugin, PluginManifest, Plugin_2, Workspace } from 'obsidian';
 import { ICON } from './constants';
 import { FileInfoTempleProvider } from './providers/FileInfoTempleProvider';
 import { DateTimeTempleProvider } from './providers/DateTimeTempleProvider';
 import { ZettelTempleProvider } from './providers/ZettelTempleProvider';
 import { TempleService } from './TempleService';
-import { DateTimeFilters } from "./providers/DateTimeFilters";
+import { DateTimeFilters } from './providers/DateTimeFilters';
 import { TempleSettingsTab } from './settings/TempleSettingsTab';
 import { ObsidianService } from './ObsidianService';
-import { TempleSettings } from "./settings/TempleSettings";
-import { TempleSettingsProvider } from "./settings/TempleSettingsProvider";
+import { TempleSettings } from './settings/TempleSettings';
+import { TempleSettingsProvider } from './settings/TempleSettingsProvider';
 import { ClipboardTempleProvider } from './providers/ClipboardTempleProvider';
-import { ITempleProvider } from "./providers/ITempleProvider";
-import { container } from "tsyringe";
-import { Symbols } from "./Symbols";
-import { DateTimeProvider } from "./providers/DateTimeProvider";
+import { ITempleProvider } from './providers/ITempleProvider';
+import { container } from 'tsyringe';
+import { Symbols } from './Symbols';
+import { DateTimeProvider } from './providers/DateTimeProvider';
 
 export default class TemplePlugin extends Plugin {	
 	constructor(app: App, pluginManifest: PluginManifest) {

@@ -1,7 +1,7 @@
-import { TempleSettings } from "../settings/TempleSettings";
-import { inject, injectable } from "tsyringe";
-import { Symbols } from "../Symbols";
-import { DateTime } from "luxon";
+import { TempleSettings } from '../settings/TempleSettings';
+import { inject, injectable } from 'tsyringe';
+import { Symbols } from '../Symbols';
+import { DateTime } from 'luxon';
 
 
 @injectable()

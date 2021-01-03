@@ -12,7 +12,7 @@ export class TempleSettingsTab extends PluginSettingTab {
 	}
 
 	display(): void {
-		let { containerEl: e } = this;
+		const { containerEl: e } = this;
 
 		e.empty();
 
