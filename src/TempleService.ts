@@ -6,6 +6,8 @@ import { injectable, injectAll } from 'tsyringe';
 import { Symbols } from './Symbols';
 import { DateTime } from 'luxon';
 import { DateTimeFilters } from './providers/DateTimeFilters';
+import { EOL } from 'os';
+import { inspect } from 'util';
 
 export interface IAggregatedContext {
 	[name: string]: TempleContext<any>;
@@ -27,6 +29,10 @@ export class TempleService {
 		this._env.addFilter('dateFormat', (input: DateTime, format: string) => {
 			return this._dateTimeFilters.format(input, format);
 		});
+
+		this._env.addFilter('inspect', (input: any, depth: null) => {
+			return inspect(input, undefined, depth);
+		})
 	}
 
 	async resolve(): Promise<IAggregatedContext> {
@@ -42,5 +48,19 @@ export class TempleService {
 		// only take the context from each TempleContext for nunjucks
 		const context = _.mapValues(aggregated, c => c.context);
 		return this._env.renderString(template, context);
+	}
+
+	async renderDoc(): Promise<string> {
+		
+		const doc = (await Promise.all(this._providers
+			.map(async provider => {
+				const doc = await provider.docs();
+				return this._env.renderString(doc.template, ({
+					[provider.name]: doc.context.context
+				}));
+			})))
+			.join(`${EOL}---${EOL}`);
+
+		return doc;
 	}
 }
