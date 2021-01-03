@@ -1,13 +1,16 @@
 import { Workspace } from 'obsidian';
 import { TempleSettings } from 'src/settings/TempleSettings';
+import { Symbols } from 'src/Symbols';
+import { inject, injectable } from 'tsyringe';
 import { ITempleProvider } from './ITempleProvider';
 import { TempleContext } from './TempleContext';
 import { ZettelContext } from './ZettelContext';
 
+@injectable()
 export class ZettelTempleProvider implements ITempleProvider<ZettelContext> {
     name: string = "zettel";
 
-    constructor(private _workspace: Workspace, private _settings: TempleSettings) {
+    constructor(private _workspace: Workspace, @inject(Symbols.TempleSettings) private _settings: TempleSettings) {
 
     }
 

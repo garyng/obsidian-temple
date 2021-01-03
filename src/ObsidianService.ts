@@ -1,13 +1,15 @@
-import { Notice, Plugin, TFile, TFolder, Vault } from 'obsidian';
-import { DEFAULT_SETTINGS, TempleSettings } from './settings/TempleSettings';
+import { Notice, Plugin_2, TFile, TFolder, Vault } from 'obsidian';
+import { inject, injectable } from 'tsyringe';
+import { TempleSettings } from './settings/TempleSettings';
+import { Symbols } from './Symbols';
 import { TempleFuzzySuggestModal } from './TempleFuzzySuggestModal';
 import { TempleService } from './TempleService';
 
+@injectable()
 export class ObsidianService {
-	public settings: TempleSettings;
 	private _prompt: TempleFuzzySuggestModal;
 
-	constructor(private _obs: Plugin, private _temple: TempleService) {
+	constructor(@inject(Symbols.Plugin) private _obs: Plugin_2, private _temple: TempleService, @inject(Symbols.TempleSettings) private _settings: TempleSettings) {
 		this._prompt = new TempleFuzzySuggestModal(_obs.app, this);
 	}
 
@@ -28,9 +30,9 @@ export class ObsidianService {
 	 */
 	public getTemplatePaths(): string[] {
 		let templates: string[] = [];
-		let dir = this._obs.app.vault.getAbstractFileByPath(this.settings.templatesDir);
+		let dir = this._obs.app.vault.getAbstractFileByPath(this._settings.templatesDir);
 		if (dir instanceof TFolder) {
-			Vault.recurseChildren(dir , file => {
+			Vault.recurseChildren(dir, file => {
 				if (file instanceof TFile) {
 					templates.push(file.path);
 				}
@@ -44,7 +46,7 @@ export class ObsidianService {
 	 * Render and insert the selected template.
 	 */
 	public async insertTemplate(path: string) {
-		
+
 		let active = this._obs.app.workspace.getActiveFile();
 		if (active == null) {
 			new Notice("No active file!");
@@ -66,13 +68,5 @@ export class ObsidianService {
 		} else {
 			throw new Error(`Unable to read '${file?.path}'`);
 		}
-	}
-
-	public async loadSettings() {
-		this.settings = Object.assign(DEFAULT_SETTINGS, await this._obs.loadData());
-	}
-
-	public async saveSettings() {
-		await this._obs.saveData(this.settings);
 	}
 }

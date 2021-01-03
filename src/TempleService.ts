@@ -2,16 +2,16 @@ import * as njk from 'nunjucks';
 import * as _ from 'lodash';
 import { ITempleProvider } from './providers/ITempleProvider';
 import { TempleContext } from './providers/TempleContext';
+import { injectable, injectAll } from 'tsyringe';
+import { Symbols } from './Symbols';
 
 export interface IAggregatedContext {
 	[name: string]: TempleContext<any>;
 }
 
+@injectable()
 export class TempleService {
-	private _providers: ITempleProvider<any>[] = [];
-
-	register(provider: ITempleProvider<any>): void {
-		this._providers.push(provider);
+	constructor(@injectAll(Symbols.ITempleProvider) private _providers: ITempleProvider<any>[]) {
 	}
 
 	async resolve(): Promise<IAggregatedContext> {
