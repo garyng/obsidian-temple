@@ -1,0 +1,15 @@
+{
+    "[typescript]": {
+        // Never use anything different from 4 spaces
+        "editor.detectIndentation": false,
+        "editor.insertSpaces": true,
+        "editor.tabSize": 4,
+        // Show a ruler at 88 chars
+        "editor.rulers": [88],
+        // Formating on save
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": true
+        },
+    },
+}

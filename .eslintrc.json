@@ -16,6 +16,7 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "quotes": ["warn", "single"]
+        "quotes": ["warn", "single"],
+        "indent": ["error", "space"]
     }
 }
