@@ -4,6 +4,8 @@ import { TempleSettings } from '../settings/TempleSettings';
 import { Symbols } from '../Symbols';
 import { DateTimeProvider } from './DateTimeProvider';
 
+export class DateTimeParsingError extends Error { }
+
 @injectable()
 export class DateTimeFilters {
 
@@ -14,5 +16,12 @@ export class DateTimeFilters {
         return this._datetime
             .apply(input)
             .toFormat(format || this._settings.datetime.format);
+    }
+
+    public parse(input: string, format: string): DateTime {
+        if (!format) throw TypeError("A format is required for parseDate")
+        const parsed = DateTime.fromFormat(input, format)
+        if (parsed.invalidReason) throw new DateTimeParsingError(`${parsed.invalidReason}: ${parsed.invalidExplanation}`);
+        return parsed
     }
 }

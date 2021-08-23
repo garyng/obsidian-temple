@@ -38,6 +38,11 @@ export class TempleService {
         });
 
         // TODO: Add documentation
+        this._env.addFilter('parseDate', (input: string, format: string) => {
+            return this._dateTimeFilters.parse(input, format)
+        })
+
+        // TODO: Add documentation
         this._env.addFilter('inspect', (input: any, depth: null) => {
             return inspect(input, undefined, depth);
         })
