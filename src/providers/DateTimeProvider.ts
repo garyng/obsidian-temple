@@ -25,12 +25,10 @@ export class DateTimeProvider {
             dt = DateTime.fromMillis(dt as number);
         } else if (dt instanceof Date) {
             dt = DateTime.fromJSDate(dt as Date);
+        } else if (!(dt instanceof DateTime)) {
+            console.error("Rejected DateTime value:", dt)
+            throw TypeError("Only DateTime, Date and ints are accepted for date filters");
         }
-        // console.log(dt)
-        // } else if (!(dt instanceof DateTime)) {
-        //     console.error("Rejected DateTime value:", dt)
-        //     throw TypeError("Only DateTime, Date and ints are accepted for date filters");
-        // }
 
         // Apply localization settings
         if (this._settings.datetime.locale) {
